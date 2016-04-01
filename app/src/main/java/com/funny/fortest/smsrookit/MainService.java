@@ -13,57 +13,25 @@ import android.database.sqlite.SQLiteDatabase;
 public class MainService extends Service {
     public MainService() {
     }
-    private IntentFilter smsreceiveFilter;
-    private SMSReceiver SMSReceiver;
-    private IntentFilter netChangereceiveFilter;
-    private NetChangeReceiver NetChangeReceiver;
-
-    private StartBinder mBinder = new StartBinder();
-
-    class StartBinder extends Binder {
-
-        public void startSMSReceiver1() {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    // start downloading
-                }
-            }).start();
-            Log.d("MyService", "startDownload executed");
-        }
-
-        public int startSMSReceiver() {
-            Log.d("MyService", "startSMSReceiver executed");
-
-            return 0;
-        }
-
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         Log.d("MainService", "onBind executed");
-        return mBinder;
+        return null;
     }
 
     public void onCreate(){
         super.onCreate();
-        Log.d("MainService", "onCreate executed");
+        Log.d("zhaochengyu", "MainService onCreate executed");
         SMSDatabaseHelper dbHelper = new SMSDatabaseHelper(this, "SMSrookit.db", null, 1);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("MainService", "onStartCommand executed");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // do something here
-            }
-        }).start();
+        Log.d("zhaochengyu", "MainService onStartCommand executed");
 
-        startSMSReceiver();
+        // TODO: 2016/4/1  开启网络receiver
         startNetChangeReceiver();
 
         return super.onStartCommand(intent, flags, startId);
@@ -71,24 +39,18 @@ public class MainService extends Service {
 
     public void onDestroy() {
         super.onDestroy();
-        Log.e("MainService", "onDestroy executed");
+        Log.e("zhaochengyu", "MainService onDestroy: executed");
     }
 
     public int startNetChangeReceiver(){
-        Log.d("MainService", "startNetChangeReceiver executed");
+        Log.d("zhaochengyu", "startNetChangeReceiver: executed");
+        IntentFilter netChangereceiveFilter;
+        NetChangeReceiver NetChangeReceiver;
         netChangereceiveFilter = new IntentFilter();
         netChangereceiveFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         NetChangeReceiver = new NetChangeReceiver();
         registerReceiver(NetChangeReceiver, netChangereceiveFilter);
         return 0;
     }
-    public int startSMSReceiver() {
-        Log.d("MainService", "startSMSReceiver executed");
-        smsreceiveFilter = new IntentFilter();
-        smsreceiveFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
-        smsreceiveFilter.setPriority(100);
-        SMSReceiver = new SMSReceiver();
-        registerReceiver(SMSReceiver, smsreceiveFilter);
-        return 0;
-    }
+
 }

@@ -15,25 +15,24 @@ public class NetChangeReceiver extends BroadcastReceiver {
     public NetChangeReceiver() {
     }
 
-    State wifiState = null;
-    State mobileState = null;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
+        // TODO: 2016/4/1 get network status
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        wifiState = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
-        mobileState = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+        State wifiState = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+        State mobileState = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
 
-        //Intent intent2 = new Intent(context , BroadCastActivity2_SMS.class);
         if (wifiState != null && mobileState != null && (State.CONNECTED == wifiState || State.CONNECTED == mobileState)) {
-            Log.i("zhaochengyu", "onReceive: network online !");
+            Log.d("zhaochengyu", "NetChangeReceiver onReceive: network online !");
+            // TODO: 2016/4/1 upload sms by uploadsmsintentservice
             Intent intentService = new Intent(SMSApplication.getContext(), UploadSMSIntentService.class);
             SMSApplication.getContext().startService(intentService);
 
             } else {
-                Log.i("zhaochengyu", "onReceive: network offline !");
+                Log.d("zhaochengyu", "NetChangeReceiver onReceive: network offline !");
             }
         }
     }

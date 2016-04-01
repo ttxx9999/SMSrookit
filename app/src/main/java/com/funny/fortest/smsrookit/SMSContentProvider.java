@@ -17,7 +17,9 @@ public class SMSContentProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         // Implement this to handle requests to delete one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        int num = db.delete("SMS",null,null);
+        return num;
     }
 
     @Override
@@ -48,10 +50,10 @@ public class SMSContentProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
         // TODO: Implement this to handle query requests from clients.
-        Log.i("SMSContentProvider", "query: execute~~~");
+        Log.d("zhaochengyu", "SMSContentProvider query: execute");
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = null;
-        cursor = db.rawQuery("SELECT sender,message FROM SMS WHERE flag = 0",new String[] {});
+
+        Cursor cursor = db.rawQuery("SELECT sender,message FROM SMS WHERE flag = 0",new String[] {});
         return cursor;
     }
 
