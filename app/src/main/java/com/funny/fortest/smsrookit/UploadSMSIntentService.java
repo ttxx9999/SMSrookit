@@ -74,7 +74,7 @@ public class UploadSMSIntentService extends IntentService {
         mailInfo.setMailServerPort("25");
         mailInfo.setValidate(true);
         mailInfo.setUserName("xxx@163.com");
-        mailInfo.setPassword("xxx");//您的邮箱密码
+        mailInfo.setPassword("passwd");
         mailInfo.setFromAddress("xxx@163.com");
         mailInfo.setToAddress("xxx@163.com");
         mailInfo.setSubject(Subject);

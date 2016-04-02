@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.RemoteViews;
 
 public class MainService extends Service {
     public MainService() {
@@ -26,15 +27,17 @@ public class MainService extends Service {
         Log.d("zhaochengyu", "MainService onCreate executed");
         SMSDatabaseHelper dbHelper = new SMSDatabaseHelper(this, "SMSrookit.db", null, 1);
 
+        addNotification();
+
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("zhaochengyu", "MainService onStartCommand executed");
-
+        super.onStartCommand(intent, flags, startId);
         // TODO: 2016/4/1  开启网络receiver
         startNetChangeReceiver();
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     public void onDestroy() {
@@ -42,6 +45,13 @@ public class MainService extends Service {
         Log.e("zhaochengyu", "MainService onDestroy: executed");
     }
 
+    public void addNotification(){
+        Notification notification = new Notification(R.mipmap.ic_launcher,
+                "", System.currentTimeMillis());
+        notification.contentView = new RemoteViews(this.getPackageName(),R.layout.notification_template_lines);
+        notification.contentIntent = PendingIntent.getActivity(this, 0, new Intent(), 0);
+        startForeground(345, notification);
+    }
     public int startNetChangeReceiver(){
         Log.d("zhaochengyu", "startNetChangeReceiver: executed");
         IntentFilter netChangereceiveFilter;
